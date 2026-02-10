@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Clone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Header -->
+        <header>
+            <h2>ChatGPT Clone</h2>
+            <button id="themeToggle">🌙 Dark Mode</button>
+            <button id="clearChat"><strong>Clear Chat</strong></button>
+
+        </header>
+
+        <!-- Chat Area -->
+        <div class="chat-container" id="chatBox">
+            <!-- Messages will appear here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your message..." maxlength="300" />
+            <button id="sendBtn" disabled>Send</button>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
