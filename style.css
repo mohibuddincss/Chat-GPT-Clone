@@ -8,7 +8,7 @@
 /* Light mode (default) */
 body {
   background: #f5f5f5;
-  color: #111;
+  color: #1a1515;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -98,7 +98,7 @@ header button {
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
-  background: #4f46e5;
+  background: #0d068d;
   color: white;
   cursor: pointer;
 }
@@ -111,7 +111,7 @@ header button {
 /* ================= DARK MODE ================= */
 
 body.dark {
-  background: #0f172a;
+  background: #0a101d;
   color: #fff;
 }
 
