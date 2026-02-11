@@ -1,130 +1,81 @@
-// console.log("Hello World");
-
-
 const userInput = document.querySelector("#userInput");
 const sendBtn = document.querySelector("#sendBtn");
 const chatBox = document.querySelector("#chatBox");
-const clearChat = document.querySelector("#clearChat")
-
-
-
-// enable or disabled btn
-userInput.addEventListener('input', ()=>{
-  sendBtn.disabled = userInput.value.trim() === "";
-});
-
-
-/* Add Message Function */
-function addMessage(text, sender) {
-  const messageDiv = document.createElement("div");
-  messageDiv.classList.add("message", sender);
-
-  const time = new Date().toLocaleTimeString();
-
-  messageDiv.innerHTML = `<p>${text}</p> <span class="time">${time}</span>  `;
-
-  chatBox.appendChild(messageDiv);
-
-  // Auto scroll
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-
-// send msg
-
-sendBtn.addEventListener("click", async () => {
-
-  const message = userInput.value.trim();
-  if(!message) return;
-
- addMessage(message, "user");
-
-userInput.value = "";
-sendBtn.disabled = true;
-
-// Show loading
-const loadingDiv = document.createElement("div");
-loadingDiv.classList.add("message", "ai");
-loadingDiv.innerHTML = "<p>AI is typing...</p>";
-chatBox.appendChild(loadingDiv);
-chatBox.scrollTop = chatBox.scrollHeight;
-
-// Call AI
-const aiReply = await getAIResponse(message);
-
-// Remove loading
-loadingDiv.remove();
-
-// Show AI message
-addMessage(aiReply, "ai");
-
-});
-
-
-// Enter support
-
-userInput.addEventListener("keypress" , (e)=> {
-  if(e.key === "Enter" && !sendBtn.disabled){
-    sendBtn.click();
-  }
-});
-
-
-// claer box
-
-clearChat.addEventListener('click' , ()=> {
-  chatBox.innerHTML = "";
-});
-
-
-
-const apiKey = "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";
-
-async function getAIResponse(userMessage) {
-  try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-3.5-turbo",
-        messages: [
-          { role: "user", content: userMessage }
-        ]
-      })
-    });
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-
-  } catch (error) {
-    console.error(error);
-    return "⚠️ AI failed to respond. Try again.";
-  }
-}
-
-
-
+const clearChat = document.querySelector("#clearChat");
 const themeToggle = document.querySelector("#themeToggle");
 
-function setTheme(mode) {
-  if (mode === "dark") {
-    document.body.classList.add("dark");
-    themeToggle.textContent = "☀️ Light Mode";
-  } else {
-    document.body.classList.remove("dark");
-    themeToggle.textContent = "🌙 Dark Mode";
-  }
-  localStorage.setItem("theme", mode);
+userInput.addEventListener("input",()=>{
+  sendBtn.disabled = userInput.value.trim()==="";
+});
+
+function addMessage(text,sender){
+  const div=document.createElement("div");
+  div.className=`message ${sender}`;
+  const time=new Date().toLocaleTimeString();
+  div.innerHTML=`${text}<span class="time">${time}</span>`;
+  chatBox.appendChild(div);
+  chatBox.scrollTop=chatBox.scrollHeight;
 }
 
-// Load saved theme
-const savedTheme = localStorage.getItem("theme") || "light";
-setTheme(savedTheme);
+sendBtn.addEventListener("click",async()=>{
+  const msg=userInput.value.trim();
+  if(!msg) return;
 
-themeToggle.addEventListener("click", () => {
-  const isDark = document.body.classList.contains("dark");
-  setTheme(isDark ? "light" : "dark");
+  addMessage(msg,"user");
+  userInput.value="";
+  sendBtn.disabled=true;
+
+  const loading=document.createElement("div");
+  loading.className="message ai";
+  loading.textContent="AI is typing...";
+  chatBox.appendChild(loading);
+
+  const reply=await getAIResponse(msg);
+  loading.remove();
+  addMessage(reply,"ai");
+});
+
+userInput.addEventListener("keypress",e=>{
+  if(e.key==="Enter" && !sendBtn.disabled) sendBtn.click();
+});
+
+clearChat.addEventListener("click",()=>chatBox.innerHTML="");
+
+/* API */
+
+const apiKey="YOUR_API_KEY";
+
+async function getAIResponse(msg){
+ try{
+  const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+   method:"POST",
+   headers:{
+    Authorization:`Bearer ${apiKey}`,
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify({
+     model:"openai/gpt-3.5-turbo",
+     messages:[{role:"user",content:msg}]
+   })
+  });
+
+  const data=await res.json();
+  return data.choices[0].message.content;
+ }catch{
+  return "⚠️ Error getting response";
+ }
+}
+
+/* THEME */
+
+function setTheme(mode){
+ document.body.classList.toggle("dark",mode==="dark");
+ localStorage.setItem("theme",mode);
+ themeToggle.textContent = mode==="dark" ? "☀️" : "🌙";
+}
+
+setTheme(localStorage.getItem("theme") || "light");
+
+themeToggle.addEventListener("click",()=>{
+ setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 });
